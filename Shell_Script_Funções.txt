@@ -1,0 +1,156 @@
+#!/bin/bash
+
+# Limpa a tela
+clear
+
+# Definindo cores para o output
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[1;33m"
+BLUE="\033[0;34m"
+NC="\033[0m"  # Sem cor
+
+# Banner LAURENT em ASCII
+# Banner gerado com auxílio de: https://manytools.org/hacker-tools/ascii-banner/
+LAURENT_ART=$(cat << "EOF"
+
+ __         ______     __  __     ______     ______     __   __     ______
+/\ \       /\  __ \   /\ \/\ \   /\  == \   /\  ___\   /\ "-.\ \   /\__  _\
+\ \ \____  \ \  __ \  \ \ \_\ \  \ \  __<   \ \  __\   \ \ \-.  \  \/_/\ \/
+ \ \_____\  \ \_\ \_\  \ \_____\  \ \_\ \_\  \ \_____\  \ \_\\"\_\    \ \_\
+  \/_____/   \/_/\/_/   \/_____/   \/_/ /_/   \/_____/   \/_/ \/_/     \/_/
+
+EOF
+)
+
+# Exibe o banner
+echo -e "${GREEN}$LAURENT_ART${NC}"
+echo -e "${BLUE}Bem-vindo ao script LAURENT!${NC}"
+echo ""
+
+# Função: Mostrar informações do sistema
+show_system_info() {
+    echo -e "${GREEN}Informações do Sistema:${NC}"
+    uname -a
+    echo -e "\nUptime:"
+    uptime
+    echo ""
+}
+
+# Função: Mostrar uso do disco
+show_disk_usage() {
+    echo -e "${GREEN}Uso do Disco:${NC}"
+    df -h
+    echo ""
+}
+
+# Função: Mostrar processos ativos (top)
+show_top_processes() {
+    echo -e "${GREEN}Top Processos Ativos (primeiras 15 linhas):${NC}"
+    top -b -n 1 | head -n 15
+    echo ""
+}
+
+# Função: Atualizar o sistema
+update_system() {
+    echo -e "${GREEN}Atualizando o sistema...${NC}"
+    sudo dnf update && sudo dnf upgrade -y
+    echo -e "${GREEN}Atualização concluída!${NC}"
+    echo ""
+}
+
+# Função: Abrir o Kong Manager
+open_kong_manager() {
+    echo -e "${GREEN}Abrindo o Kong Manager no navegador...${NC}"
+    xdg-open "http://localhost:8002" 2>/dev/null || echo "Comando xdg-open não encontrado. Abra http://localhost:8002 manualmente."
+    echo ""
+}
+
+# Função: Exibir informações de rede
+show_network_info() {
+    echo -e "${GREEN}Informações de Rede:${NC}"
+    ip a
+    echo ""
+}
+
+# Função: Exibir logs recentes do sistema
+show_system_logs() {
+    echo -e "${GREEN}Últimas 20 linhas dos logs do sistema:${NC}"
+    sudo journalctl -n 20 --no-pager
+    echo ""
+}
+
+# Função: Verificar status do Docker
+show_docker_status() {
+    echo -e "${GREEN}Status do Docker:${NC}"
+    systemctl status docker --no-pager | head -n 15
+    echo ""
+}
+
+# Função: Reiniciar o serviço de rede (exemplo)
+restart_network() {
+    echo -e "${GREEN}Reiniciando o serviço de rede...${NC}"
+    sudo systemctl restart networking && echo "Serviço de rede reiniciado." || echo "Falha ao reiniciar a rede."
+    echo ""
+}
+
+# Loop principal do menu
+while true; do
+    echo -e "${YELLOW}Selecione uma opção:${NC}"
+    echo "1) Informações do Sistema"
+    echo "2) Uso do Disco"
+    echo "3) Top Processos Ativos"
+    echo "4) Atualizar Sistema"
+    echo "5) Abrir Kong Manager (http://localhost:8002)"
+    echo "6) Informações de Rede"
+    echo "7) Exibir Logs Recentes do Sistema"
+    echo "8) Ver Status do Docker"
+    echo "9) Reiniciar Serviço de Rede"
+    echo "10) Sair"
+    echo ""
+    read -p "Digite sua escolha: " choice
+    echo ""
+
+    case $choice in
+        1)
+            show_system_info
+            ;;
+        2)
+            show_disk_usage
+            ;;
+        3)
+            show_top_processes
+            ;;
+        4)
+            update_system
+            ;;
+        5)
+            open_kong_manager
+            ;;
+        6)
+            show_network_info
+            ;;
+        7)
+            show_system_logs
+            ;;
+        8)
+            show_docker_status
+            ;;
+        9)
+            restart_network
+            ;;
+        10)
+            echo -e "${GREEN}Saindo...${NC}"
+            exit 0
+            ;;
+        *)
+            echo -e "${RED}Opção inválida! Tente novamente.${NC}"
+            ;;
+    esac
+
+    read -p "Pressione [Enter] para continuar..."
+    clear
+    echo -e "${GREEN}$LAURENT_ART${NC}"
+    echo -e "${BLUE}Bem-vindo ao script LAURENT!${NC}"
+    echo ""
+done
