@@ -104,9 +104,6 @@ Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICEN
 
 Para dúvidas, sugestões ou problemas, abra uma issue neste repositório ou entre em contato:
 
-- Email: seu-email@example.com
-- Twitter: [@seuusuario](https://twitter.com/seuusuario)
-
 ---
 
 ⭐ **LAURENT** - Tornando a administração de sistemas Linux mais simples e eficiente!
